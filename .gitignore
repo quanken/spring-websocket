@@ -3,3 +3,14 @@ build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
+
+# Ignore for ide
+.classpath
+.project
+.settings
+.idea
+*.iml
+classes
+out
+bin
+deploy
