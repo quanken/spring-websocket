@@ -1,0 +1,76 @@
+apply plugin: 'war'
+apply plugin: 'groovy'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'maven'
+apply plugin: 'idea'
+
+description = 'a simple spring 4 websocket gradle project'
+
+sourceSets.main.java.srcDirs = []
+sourceSets.main.groovy.srcDirs += ["src/main/java"]
+
+repositories {
+	mavenCentral()
+}
+
+war {
+	baseName = "spring-websocket"
+}
+
+dependencies {
+	/** spring framework and mybatis dependency **/
+	def springVersion = '4.1.1.RELEASE'
+	compile "org.springframework:spring-aop:${springVersion}"
+	compile "org.springframework:spring-aspects:${springVersion}"
+	compile "org.springframework:spring-core:${springVersion}"
+	compile "org.springframework:spring-context:${springVersion}"
+	compile "org.springframework:spring-context-support:${springVersion}"
+	compile "org.springframework:spring-expression:${springVersion}"
+	compile "org.springframework:spring-tx:${springVersion}"
+	compile "org.springframework:spring-webmvc:${springVersion}"
+    compile "org.springframework:spring-websocket:${springVersion}"
+    compile "org.springframework:spring-messaging:${springVersion}"
+
+	// Others
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.3'
+	compile 'org.slf4j:slf4j-log4j12:1.7.7'
+    compile 'org.codehaus.groovy:groovy:2.3.6'
+
+	providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
+	runtime 'javax.servlet:jstl:1.1.2'
+    testCompile 'junit:junit:4.11'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'  
+}
+tasks.withType(GroovyCompile) {
+    options.encoding = 'UTF-8'
+}
+
+/** 
+ * script to create project structure
+ * Usage : gradle createGroovyProject|createWebProject
+ */
+task createGroovyProject << {
+	sourceSets*.java.srcDirs*.each { it.mkdirs() }
+	sourceSets*.groovy.srcDirs*.each { it.mkdirs() }
+	sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+task createWebProject(dependsOn: 'createGroovyProject') << {
+	def webAppDir 	= file(project.webAppDirName) 
+	webAppDir.mkdirs()
+	// web配置文件根目录
+	def webInfDir 	= file(project.webAppDirName + "/WEB-INF") 
+	webInfDir.mkdirs()
+	// 页面或者模板存放路径
+	def viewDir 	= file(project.webAppDirName + "/WEB-INF/views") 
+	viewDir.mkdirs()
+	// 存放静态文件的目录js img css
+	def jsDir 		= file(project.webAppDirName + "/js") 
+	def imgDir 		= file(project.webAppDirName + "/img") 
+	def cssDir		= file(project.webAppDirName + "/css") 
+	jsDir.mkdirs()
+	imgDir.mkdirs()
+	cssDir.mkdirs()
+}
